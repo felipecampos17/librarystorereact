@@ -29,7 +29,8 @@ app.get("/books", async (req, res) => {
   console.log("get request done");
   const myDB = client.db("crudDB");
   const myColl = myDB.collection("books");
-  const all = await myColl.find({ name: "Harry Potter" });
+  //const all = await myColl.find({ name: "Harry Potter" });
+  const all = await myColl.find({});
   let books = [];
   for await (const doc of all) {
     books.push(doc);

@@ -1,0 +1,28 @@
+.booktable {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.booktable th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: center;
+  background-color: #04aa6d;
+  color: white;
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.booktable td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.booktable tr:hover {
+  background-color: #ddd;
+}
+
+.booktable tr:nth-child(even) {
+  background-color: #f2f2f2;
+}

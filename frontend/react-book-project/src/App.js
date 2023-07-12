@@ -1,31 +1,68 @@
 import "./App.css";
 import React, { useEffect, useState } from "react";
+import BookTable from "./components/BookTable";
+import BookEditor from "./components/BookEditor";
+import BookButton from "./components/BookButton";
 
 function App() {
   const [data, setData] = useState([]);
   const [nameBook, setNameBook] = useState("");
   const [titleBook, setTitleBook] = useState("");
 
-  const postRequest = () => {
-    const data = {
+  const handleNameChange = (event) => {
+    setNameBook(event.target.value);
+  };
+
+  const handleTitleChange = (event) => {
+    setTitleBook(event.target.value);
+  };
+
+  const handleButtonPost = () => {
+    if (nameBook === "" || titleBook === "") {
+      console.log("Fail");
+      return;
+    }
+    postRequest();
+  };
+
+  const handleButtonRefresh = async () => {
+    try {
+      const response = await fetch("http://localhost:3001/books");
+      if (!response.ok) {
+        throw new Error("Erro na requisição");
+      }
+      const jsonData = await response.json();
+      console.log(jsonData);
+      setData(jsonData);
+    } catch (error) {
+      console.log("Error:", error);
+    }
+  };
+
+  const postRequest = async () => {
+    const requestData = {
       name: nameBook,
       title: titleBook,
     };
 
-    fetch("http://localhost:3001/book", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    })
-      .then((response) => response.json())
-      .then((responseData) => {
-        console.log("Response:", responseData);
-      })
-      .catch((error) => {
-        console.log("Error:", error);
+    try {
+      const response = await fetch("http://localhost:3001/book", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestData),
       });
+
+      if (!response.ok) {
+        throw new Error("Error in request");
+      }
+
+      const responseData = await response.json();
+      console.log("Response:", responseData);
+    } catch (error) {
+      console.log("Error:", error);
+    }
   };
 
   useEffect(() => {
@@ -48,45 +85,12 @@ function App() {
 
   return (
     <div className="container">
-      <h1>Simple Inventory Table</h1>
-      <table className="tablebook">
-        <thead>
-          <tr>
-            <th>Book Name</th>
-            <th>Book Title</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((item) => (
-            <tr key={item._id}>
-              <td>{item.name}</td>
-              <td>{item.title}</td>
-
-              <td />
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <input
-        value={nameBook}
-        onChange={(event) => {
-          setNameBook(event.target.value);
-        }}
-      ></input>
-      <input
-        value={titleBook}
-        onChange={(event) => {
-          setTitleBook(event.target.value);
-        }}
-      ></input>
-      <button
-        className="botton"
-        onClick={() => {
-          postRequest();
-        }}
-      >
-        POST
-      </button>
+      <h1>Book Table</h1>
+      <BookTable data={data} />
+      <BookEditor bookName={nameBook} changeEvent={handleNameChange} />
+      <BookEditor bookName={titleBook} changeEvent={handleTitleChange} />
+      <BookButton clickAction={handleButtonPost} buttonText="Save" />
+      <BookButton clickAction={handleButtonRefresh} buttonText="Refresh" />
     </div>
   );
 }
