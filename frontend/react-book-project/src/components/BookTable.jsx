@@ -1,7 +1,7 @@
 import React from "react";
 import "../styles/BookTable.css";
 
-function BookTable({ data }) {
+function BookTable({ data, onclickEvent }) {
   return (
     <div className="bookTableGeneral">
       <table className="booktable">
@@ -13,7 +13,7 @@ function BookTable({ data }) {
         </thead>
         <tbody>
           {data.map((item) => (
-            <tr key={item._id}>
+            <tr key={item._id} onClick={() => onclickEvent(item)}>
               <td>{item.name}</td>
               <td>{item.title}</td>
             </tr>
